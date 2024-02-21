@@ -1,0 +1,51 @@
+## Project 2: Lexical and Syntax Analysis
+
+We will be using python to perform lexical and syntax analysis on a python program. The program will check for correct indentation, verify the syntactic correctness of all function headers, count the occurrences of the keyword "print" in the input program, and output to a text file the original input program, the updated input program, and the count of occurrences of the keyword "print."
+
+### First function: Check for correct indentation
+
+def check_indentation(file):
+    # Open the file and read the lines
+    with open(file, 'r') as f:
+      
+    # Check for correct indentation
+    :
+        # If the line is not empty
+
+            # If the number of spaces is not a multiple of 4
+
+                # Fix the indentation
+
+    # Write the updated lines to a new file
+
+### Second function: Verify the syntactic correctness of all function headers
+def verify_function_headers(file):
+    # Open the file and read the lines
+   
+      
+    # Check for correct function headers
+
+        # If the line is a function header
+
+            # If the function header is not correct
+
+                # Fix the function header
+
+    # Write the updated lines to a new file
+
+### Third function: Count the occurrences of the keyword "print"
+def count_print(file):
+    # Open the file and read the lines
+
+    # Count the occurrences of the keyword "print"
+
+    # Write the count to a new file
+### Fourth function: Output to a text file the original input program, the updated input program, and the count of occurrences of the keyword "print."
+def output_to_file(file, updated_file, count):
+    # Write the original input program to a new file
+
+    # Write the updated input program to a new file
+
+    # Write the count of occurrences of the keyword "print" to a new file
+
+    # Return the names of the new files
