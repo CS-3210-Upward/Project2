@@ -1,54 +1,73 @@
+import re
+
 class LexicalAnalyzer:
-    """Given a string, this class will return a syntatically correct program"""
-    
-    def __init__(self, file): #initializer function
+    def __init__(self, file):
         self.file = file
-    
-    def check_identation( file):
+
+    def check_identation(self):
         """This function checks for correct indentation"""
-        with open(file, 'r') as f: #open the file and read the lines
-            lines = f.readlines() 
-            for line in lines: #iterate through the lines
-                if line.strip() != "": #strip the line of any white space
-                    if len(line) % 4 != 0: #if the number of spaces is not a multiple of 4, or a tab
-                        line = "    " + line #fix the indentation
-        with open("updated_file.txt", "w") as f: #write the updated lines to a new file
-            f.writelines(lines) 
-        return "updated_file.txt" #return the name of the new file
-    
-    def verify_function_headers(file): 
-        """This function verifies the syntactic correctness of all function headers"""
-        with open(file, 'r') as f: #open the file and read the lines
-            lines = f.readlines() 
-            for line in lines: #iterate through the lines
-                if "def" in line: #if the line is a function header
-                    if line[-1] != ":": #if the function header is not correct
-                        line = line[:-1] + ":" #remove last character
+        with open(self.file, 'r') as f:
+            lines = f.readlines()
+            for line in lines:
+                if line.strip() != "":
+                    if len(line) % 4 != 0:
+                        line = "    " + line
         with open("updated_file.txt", "w") as f:
             f.writelines(lines)
         return "updated_file.txt"
-    
-    def count_print(file):
-        """This function counts the occurrences of the keyword "print" """
-        with open(file, 'r') as f:
-            lines = f.readlines() #open the file and read the lines
-            count = 0 #initialize count to 0
+
+    def verify_function_headers(self):
+        """This function verifies the syntactic correctness of all function headers"""
+        with open(self.file, 'r') as f:
+            lines = f.readlines()
             for line in lines:
-                count += line.count("print")#count the occurrences of the keyword "print"
+                if "def" in line:
+                    if line[-1] != ":":
+                        line = line[:-1] + ":"
+        with open("updated_file.txt", "w") as f:
+            f.writelines(lines)
+        return "updated_file.txt"
+
+    def count_print(self):
+        """This function counts the occurrences of the keyword 'print' """
+        with open(self.file, 'r') as f:
+            lines = f.readlines()
+            count = 0
+            for line in lines:
+                count += line.count("print")
         with open("count.txt", "w") as f:
             f.write(str(count))
         return "count.txt"
-    
-    def output_to_file(file, updated_file, count):
-        """This function outputs to a text file the original input program, the updated input program, and the count of occurrences of the keyword "print." """
-        with open(file, 'r') as f: #write the original input program to a new file
-            original = f.read() 
-        with open(updated_file, 'r') as f: #write the updated input program to a new file
+
+    def output_to_file(self, updated_file, count):
+        """This function outputs to a text file the original input program, the updated input program, and the count of occurrences of the keyword 'print.' """
+        with open(self.file, 'r') as f:
+            original = f.read()
+        with open(updated_file, 'r') as f:
             updated = f.read()
-        with open(count, 'r') as f:#write the count of occurrences of the keyword "print" to a new file
+        with open(count, 'r') as f:
             count = f.read()
         with open("output.txt", "w") as f:
             f.write("Original input program:\n" + original + "\n\nUpdated input program:\n" + updated + "\n\nCount of occurrences of the keyword 'print': " + count)
-        return "output.txt" #return the names of the new files
-    
-    
+        return "output.txt"
+
+    def run_analysis(self):
+        """Run the entire analysis process"""
+        updated_file_indentation = self.check_identation()
+        updated_file_headers = self.verify_function_headers()
+        count_file = self.count_print()
+        output_file = self.output_to_file(updated_file_headers, count_file)
+
+        return f"Analysis completed. Output written to: {output_file}"
+
+if __name__ == "__main__":
+    file_path = "testfile1.py"  
+
+    # Create an instance of LexicalAnalyzer
+    lexical_analyzer = LexicalAnalyzer(file_path)
+
+    # Run the analysis
+    result = lexical_analyzer.run_analysis()
+
+    # Print the result
+    print(result)
