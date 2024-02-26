@@ -1,6 +1,6 @@
 ## Project 2: Lexical and Syntax Analysis
 
-We will be using python to perform lexical and syntax analysis on a python program. The program will check for correct indentation, verify the syntactic correctness of all function headers, count the occurrences of the keyword "print" in the input program, and output to a text file the original input program, the updated input program, and the count of occurrences of the keyword "print."
+"""We will be using python to perform lexical and syntax analysis on a python program. The program will check for correct indentation, verify the syntactic correctness of all function headers, count the occurrences of the keyword "print" in the input program, and output to a text file the original input program, the updated input program, and the count of occurrences of the keyword "print.""""
 
 ### First function: Check for correct indentation
 
@@ -9,7 +9,7 @@ def check_indentation(file):
     with open(file, 'r') as f:
       
     # Check for correct indentation
-    :
+    
         # If the line is not empty
 
             # If the number of spaces is not a multiple of 4

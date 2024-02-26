@@ -11,5 +11,5 @@ Write a program in a language of your choice that takes in a Python program as i
 3. Count the occurrences of the keyword "print" in the input program.
 4. Output to a text file the original input program, the updated input program, and the count of occurrences of the keyword "print."
 
-Feel free to adapt the formatting further based on your preferences or specific Markdown styling guidelines.
+
 
