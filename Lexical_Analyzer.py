@@ -1,4 +1,10 @@
-import re
+"""
+Upward
+CS 3210
+"""
+
+import re  # unused but maybe useful for alternative use
+
 
 class LexicalAnalyzer:
     def __init__(self, file):
@@ -8,52 +14,88 @@ class LexicalAnalyzer:
         """This function checks for correct indentation"""
         with open(self.file, 'r') as f:
             lines = f.readlines()
+            updated_lines = []
+
+            current_indentation = 0
             for i, line in enumerate(lines):
                 if line.strip() != "":
-                    if len(line) % 4 != 0:
-                        lines[i] = "    " + line
-        with open("updated_file.txt", "w") as f:
-            f.writelines(lines)
-        return "updated_file.txt"
+                    leading_spaces = len(line) - len(line.lstrip())
+                    target_indentation = current_indentation
 
-def verify_function_headers(self):
-    """This function verifies the syntactic correctness of all function headers"""
-    with open(self.file, 'r') as f:
-        lines = f.readlines()
-        for i, line in enumerate(lines):
-            if "def" in line:
-                # Check for parentheses
-                if "(" in line and ")" in line:
-                    # Split the line into function name and arguments
-                    func_name, args_part = line.split("(", 1)
+                    if leading_spaces % 4 == 0:
+                        # The line has correct indentation
+                        current_indentation = leading_spaces
+                    else:
+                        # Fix indentation based on the previous line
+                        target_indentation = (leading_spaces // 4) * 4
+                        line = " " * target_indentation + line.lstrip()
 
-                    # Check if there are multiple arguments
-                    if "," in args_part:
-                        # Split arguments and add commas if needed
-                        args = args_part.split(",")
-                        args = [arg.strip() for arg in args]
-                        args_part = ", ".join(args)
+                    updated_lines.append(line)
 
-                    # Update the line with parentheses and colon
-                    lines[i] = f"{func_name}({args_part[:-1]}):\n"
-                elif "(" in line:
-                    # Handle the case where there is an open parenthesis but no closing parenthesis
-                    lines[i] = line.rstrip() + ")"
-                elif ")" in line:
-                    # Handle the case where there is a closing parenthesis but no open parenthesis
-                    lines[i] = "(" + line.lstrip()
+            with open("output.txt", "w") as f:
+                f.write("Original input program:\n")
+                f.writelines(lines)
+                f.write("\n\nUpdated input program:\n")
+                f.writelines(updated_lines)
+
+    def verify_function_headers(self):
+        """This function verifies the syntactic correctness of all function headers"""
+        with open(self.file, 'r') as f:
+            lines = f.readlines()
+            inside_function = False
+            updated_lines = []
+
+            for i, line in enumerate(lines):
+                if "def" in line:
+                    inside_function = True
+                    # Check for parentheses
+                    if "(" in line and ")" in line:
+                        # Split the line into function name and arguments
+                        func_name, args_part = line.split("(", 1)
+
+                        # Detect multiple arguments even if there is no comma
+                        args_count = args_part.count(",")
+                        if args_count == 0:
+                            # If there is no comma, assume one argument
+                            args_part = args_part.strip()
+                        else:
+                            # If there is a comma, split arguments and add commas if needed
+                            args = args_part.split(",")
+                            args = [arg.strip() for arg in args]
+                            args_part = ", ".join(args)
+
+                        # Replace specific strings before the name of the function with 'def'
+                        if 'fed' in func_name or 'dfe' in func_name or 'efd' in func_name or 'fde' in func_name:
+                            func_name = 'def'
+
+                        # Replace any string before the name of the function with 'def'
+                        func_line = f"{func_name.strip()}({args_part}):"
+
+                        # Ensure there's a colon at the end
+                        if not func_line.endswith(':'):
+                            func_line += ':'
+
+                        # Remove unnecessary closing parenthesis after the last argument
+                        func_line = func_line.replace(")", "")
+
+                        updated_lines.append(func_line + '\n')
+                    elif "(" in line:
+                        # Handle the case where there is an open parenthesis but no closing parenthesis
+                        updated_lines.append(line.rstrip() + "):\n")
+                    elif ")" in line:
+                        # Handle the case where there is a closing parenthesis but no open parenthesis
+                        updated_lines.append("(" + line.lstrip())
+                    else:
+                        # If there are no parentheses, just add parentheses and colon
+                        updated_lines.append(line.rstrip() + "():\n")
+                elif inside_function and line.strip() == "":
+                    inside_function = False
                 else:
-                    # If there are no parentheses, just add parentheses and colon
-                    lines[i] = line.rstrip() + "():"
-            else:
-                # If "def" is not found, replace the line with a default function header
-                lines[i] = "def default_function():\n"
+                    updated_lines.append(line)
 
-    with open("updated_file.txt", "w") as f:
-        f.writelines(lines)
-
-    return "updated_file.txt"
-
+            with open("output.txt", "a") as f:
+                f.write("\n\nUpdated function headers:\n")
+                f.writelines(updated_lines)
 
     def count_print(self):
         """This function counts the occurrences of the keyword 'print' """
@@ -62,33 +104,20 @@ def verify_function_headers(self):
             count = 0
             for line in lines:
                 count += line.count("print")
-        with open("count.txt", "w") as f:
-            f.write(str(count))
-        return "count.txt"
-
-    def output_to_file(self, updated_file, count):
-        """This function outputs to a text file the original input program, the updated input program, and the count of occurrences of the keyword 'print.' """
-        with open(self.file, 'r') as f:
-            original = f.read()
-        with open(updated_file, 'r') as f:
-            updated = f.read()
-        with open(count, 'r') as f:
-            count = f.read()
-        with open("output.txt", "w") as f:
-            f.write("Original input program:\n" + original + "\n\nUpdated input program:\n" + updated + "\n\nCount of occurrences of the keyword 'print': " + count)
-        return "output.txt"
+        with open("output.txt", "a") as f:
+            f.write(f"\nCount of occurrences of the keyword 'print': {count}\n")
 
     def run_analysis(self):
         """Run the entire analysis process"""
-        updated_file_indentation = self.check_indentation()
-        updated_file_headers = self.verify_function_headers()
-        count_file = self.count_print()
-        output_file = self.output_to_file(updated_file_headers, count_file)
+        self.check_indentation()
+        self.verify_function_headers()
+        self.count_print()
 
-        return f"Analysis completed. Output written to: {output_file}"
+        return "Analysis completed. Output written to: output.txt"
+
 
 if __name__ == "__main__":
-    file_path = "testfile2.py"  
+    file_path = "testfile2.py"
 
     # Create an instance of LexicalAnalyzer
     lexical_analyzer = LexicalAnalyzer(file_path)
