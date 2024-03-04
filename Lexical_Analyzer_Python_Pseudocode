@@ -4,49 +4,152 @@
 class LexicalAnalyzer:
 ### class can be called as an object
 
+
 def check_indentation(file):
     # Open the file and read the lines
-    with open(file, 'r') as f:
-      
-    # Check for correct indentation, if it is divisible by 4
-    
-        # If the line is not empty
+    lines <- read_lines_from_file(file)
 
-            # If the number of spaces is not a multiple of 4
+    # Initialize an empty list to store updated lines
+    updated_lines <- []
 
-                # Fix the indentation, increment by 4 spaces
+    # Initialize a variable to track current indentation
+    current_indentation <- 0
+
+    # Iterate through each line in the file
+    for each line in lines:
+        # Check if the line is not empty
+        if line is not empty:
+            # Calculate the leading spaces in the current line
+            leading_spaces <- calculate_leading_spaces(line)
+
+            # Check if the number of spaces is not a multiple of 4
+            if leading_spaces % 4 != 0:
+                # Adjust the indentation to the nearest multiple of 4
+                target_indentation <- round_to_nearest_multiple_of_4(leading_spaces)
+                
+                # Add spaces to the beginning of the line to match the target indentation
+                updated_line <- add_spaces_to_line(line, target_indentation)
+
+                # Append the updated line to the list
+                append updated_line to updated_lines
+            else:
+                # If the indentation is already correct, no modification needed
+                append line to updated_lines
+        else:
+            # If the line is empty, no modification needed
+            append line to updated_lines
 
     # Write the updated lines to a new file
+    write_lines_to_file(updated_lines, "output.txt")
 
-### Second function: Verify the syntactic correctness of all function headers
+
 def verify_function_headers(file):
     # Open the file and read the lines
-    
-    #Split the lines into def keyword, name, and arguments
-    
-    # Check for def keyword or random string in first line
+    lines = read_lines_from_file(file)
 
-        # if string of random chars is found, replace with def keyword
+    # Initialize an empty list to store updated lines
+    updated_lines = []
 
-            # if both parentheses are not present
+    # Iterate through each line in the file
+    for line in lines:
+        # Split the line into components using regular expression
+        components = split_line_into_components(line)
+
+        # Check for def keyword or random string in the first component
+        if components[0] == "def" or contains_random_string(components[0]):
+            # Replace a string of random characters with the def keyword
+            components[0] = "def"
+
+            # Check if both parentheses are not present
+            if "(" not in components[1] and ")" not in components[1]:
                 # Add parentheses to the function header
-                    # if there is no : at the end of the line
-                        # Add a colon at the end of the line
+                components[1] = add_parentheses(components[1])
+
+                # Check if there is no colon at the end of the line
+                if not line.endswith(":"):
+                    # Add a colon at the end of the line
+                    line = add_colon_to_line(line)
+
+        # Append the updated line to the list
+        updated_lines.append(line)
+
     # Write the updated lines to a new file
+    write_lines_to_file(updated_lines, "output.txt")
+
+# Helper functions
+def read_lines_from_file(file):
+    # Implementation details: Read lines from file and return as a list
+    pass
+
+def split_line_into_components(line):
+    # Implementation details: Use regular expression or string splitting to extract components
+    pass
+
+def contains_random_string(component):
+    # Implementation details: Check if the component contains a string of random characters
+    pass
+
+def add_parentheses(arg_part):
+    # Implementation details: Add parentheses to the argument part of the function header
+    pass
+
+def add_colon_to_line(line):
+    # Implementation details: Add a colon at the end of the line
+    pass
+
+def write_lines_to_file(lines, output_file):
+    # Implementation details: Write lines to a file with the specified name
+    pass
+
 
 ### Third function: Count the occurrences of the keyword "print"
 def count_print(file):
     # Open the file and read the lines
+    lines = read_lines_from_file(file)
 
-    # Count the occurrences of the keyword "print"
+    # Initialize a counter for occurrences of the keyword "print"
+    print_count = 0
+
+    # Iterate through each line in the file
+    for line in lines:
+        # Count the occurrences of the keyword "print"
+        print_count += count_occurrences(line, "print")
 
     # Write the count to a new file
+    write_count_to_file(print_count, "print_count.txt")
+
+# Helper functions
+def count_occurrences(line, keyword):
+    # Implementation details: Count the occurrences of the keyword in the given line
+    pass
+
+def write_count_to_file(count, output_file):
+    # Implementation details: Write the count to a file with the specified name
+    pass
+
+
 ### Fourth function: Output to a text file the original input program, the updated input program, and the count of occurrences of the keyword "print."
-def output_to_file(file, updated_file, count):
+def output_to_text_file(original_file, updated_file, print_count):
+    # Read the lines from the original file
+    original_lines = read_lines_from_file(original_file)
+
+    # Read the lines from the updated file
+    updated_lines = read_lines_from_file(updated_file)
+
     # Write the original input program to a new file
+    write_lines_to_file(original_lines, "original_program.txt")
 
     # Write the updated input program to a new file
+    write_lines_to_file(updated_lines, "updated_program.txt")
 
     # Write the count of occurrences of the keyword "print" to a new file
+    write_count_to_file(print_count, "print_count.txt")
 
-    # Return the names of the new files
+# Helper function (repeated from count_print function)
+def read_lines_from_file(file):
+    # Implementation details: Read lines from file and return as a list
+    pass
+
+def write_lines_to_file(lines, output_file):
+    # Implementation details: Write lines to a file with the specified name
+    pass
