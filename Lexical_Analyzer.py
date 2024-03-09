@@ -2,7 +2,6 @@
 Upward
 CS 3210
 """
-
 import re  # unused but maybe useful for alternative use
 import keyword
 import builtins
@@ -10,6 +9,7 @@ import builtins
 builtin_functions = [func for func in dir(builtins) if callable(getattr(builtins, func))]
 keywords = keyword.kwlist
 words = builtin_functions + keywords
+
 
 class LexicalAnalyzer:
     def __init__(self, file):
@@ -53,7 +53,7 @@ class LexicalAnalyzer:
             for i, line in enumerate(lines):
                 components = line.split()
                 
-                if components and components[0] == 'def':
+                if components[0] == 'def':
                     inside_function = True
                     test = True
                     while test:
@@ -61,53 +61,64 @@ class LexicalAnalyzer:
                         if "(" in line and ")" in line:
                             # Split the line into function name and arguments
                             func_name, args_part = line.split("(", 1)
+                            print(func_name, args_part)
+                            # Detect multiple arguments even if there is no comma
                             args_count = args_part.count(",")
-
+                            print(args_count)
                             if args_count == 0:
                                 # If there is no comma, assume one argument
                                 args_part = args_part.strip()
+                                print(args_part)
                                 func_line = f"{func_name.strip()}({args_part}"
+                                print(func_line)
                                 if func_line[-1] != ':':
-                                    func_line += ':'
+                                        func_line += ':'
+                                print(func_line)
                                 updated_lines.append(func_line + '\n')
                                 test = False
                             else:
                                 # If there is a comma, split arguments and add commas if needed
                                 args = args_part.split(",")
+                                print(args)
                                 args = [arg.strip() for arg in args]
                                 args_part = ", ".join(args)
+                                print(args_part)
                                 func_line = f"{func_name.strip()}({args_part}"
+                                print(func_line)
                                 if func_line[-1] != ':':
-                                    func_line += ':'
+                                        func_line += ':'
+                                print(func_line)
                                 test = False
                                 updated_lines.append(func_line + '\n')
                         elif ")" in line: 
+                            print(components[2])
                             components[2] = f"({components[2]}"
                             line = ' '.join(components)
+                            print(line)
                         else:
+                            print(line)
                             line = line.strip()
                             if line[-1] == ':':
                                 line = line.replace(":", "")
                             line = f"{line})"
-                            test = False
-                            updated_lines.append(line + '\n')
-                
+                            
                 else:
                     line_one = components[0]
                     line_two = line_one.split("(")
                     line_three = line_two[0]
                     line_four = line_three.split(":")
                     line_string = line_four[0]
-                    
                     if all(line_string not in i for i in words):
                         # Add 'def' keyword before the entire line
-                        updated_lines.append(f"def {line}\n")
-                    else:
-                        updated_lines.append(line)
+                        print(line)
+                        line = f"def {line}\n"
+                        print(line)
+                    updated_lines.append(line)
 
-            with open("output.txt", "a") as f:
-                f.write("\n\nUpdated function headers:\n")
-                f.writelines(updated_lines)
+        with open("output.txt", "a") as f:
+                    f.write("\n\nUpdated function headers:\n")
+                    f.writelines(updated_lines)
+
 
     def count_print(self):
         """This function counts the occurrences of the keyword 'print' """
@@ -126,6 +137,7 @@ class LexicalAnalyzer:
         self.count_print()
 
         return "Analysis completed. Output written to: output.txt"
+
 
 if __name__ == "__main__":
     file_path = "testfile2.py"
