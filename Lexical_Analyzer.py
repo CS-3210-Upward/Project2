@@ -4,7 +4,12 @@ CS 3210
 """
 
 import re  # unused but maybe useful for alternative use
+import keyword
+import builtins
 
+builtin_functions = [func for func in dir(builtins) if callable(getattr(builtins, func))]
+keywords = keyword.kwlist
+words = builtin_functions + keywords
 
 class LexicalAnalyzer:
     def __init__(self, file):
@@ -46,52 +51,59 @@ class LexicalAnalyzer:
             updated_lines = []
 
             for i, line in enumerate(lines):
-                if "def" in line:
+                components = line.split()
+                
+                if components and components[0] == 'def':
                     inside_function = True
-                    # Check for parentheses
-                    if "(" in line and ")" in line:
-                        # Split the line into function name and arguments
-                        func_name, args_part = line.split("(", 1)
+                    test = True
+                    while test:
+                        # Check for parentheses
+                        if "(" in line and ")" in line:
+                            # Split the line into function name and arguments
+                            func_name, args_part = line.split("(", 1)
+                            args_count = args_part.count(",")
 
-                        # Detect multiple arguments even if there is no comma
-                        args_count = args_part.count(",")
-                        if args_count == 0:
-                            # If there is no comma, assume one argument
-                            args_part = args_part.strip()
+                            if args_count == 0:
+                                # If there is no comma, assume one argument
+                                args_part = args_part.strip()
+                                func_line = f"{func_name.strip()}({args_part}"
+                                if func_line[-1] != ':':
+                                    func_line += ':'
+                                updated_lines.append(func_line + '\n')
+                                test = False
+                            else:
+                                # If there is a comma, split arguments and add commas if needed
+                                args = args_part.split(",")
+                                args = [arg.strip() for arg in args]
+                                args_part = ", ".join(args)
+                                func_line = f"{func_name.strip()}({args_part}"
+                                if func_line[-1] != ':':
+                                    func_line += ':'
+                                test = False
+                                updated_lines.append(func_line + '\n')
+                        elif ")" in line: 
+                            components[2] = f"({components[2]}"
+                            line = ' '.join(components)
                         else:
-                            # If there is a comma, split arguments and add commas if needed
-                            args = args_part.split(",")
-                            args = [arg.strip() for arg in args]
-                            args_part = ", ".join(args)
-
-                        # Replace specific strings before the name of the function with 'def'
-                        if 'fed' in func_name or 'dfe' in func_name or 'efd' in func_name or 'fde' in func_name:
-                            func_name = 'def'
-
-                        # Replace any string before the name of the function with 'def'
-                        func_line = f"{func_name.strip()}({args_part}):"
-
-                        # Ensure there's a colon at the end
-                        if not func_line.endswith(':'):
-                            func_line += ':'
-
-                        # Remove unnecessary closing parenthesis after the last argument
-                        func_line = func_line.replace(")", "")
-
-                        updated_lines.append(func_line + '\n')
-                    elif "(" in line:
-                        # Handle the case where there is an open parenthesis but no closing parenthesis
-                        updated_lines.append(line.rstrip() + "):\n")
-                    elif ")" in line:
-                        # Handle the case where there is a closing parenthesis but no open parenthesis
-                        updated_lines.append("(" + line.lstrip())
-                    else:
-                        # If there are no parentheses, just add parentheses and colon
-                        updated_lines.append(line.rstrip() + "():\n")
-                elif inside_function and line.strip() == "":
-                    inside_function = False
+                            line = line.strip()
+                            if line[-1] == ':':
+                                line = line.replace(":", "")
+                            line = f"{line})"
+                            test = False
+                            updated_lines.append(line + '\n')
+                
                 else:
-                    updated_lines.append(line)
+                    line_one = components[0]
+                    line_two = line_one.split("(")
+                    line_three = line_two[0]
+                    line_four = line_three.split(":")
+                    line_string = line_four[0]
+                    
+                    if all(line_string not in i for i in words):
+                        # Add 'def' keyword before the entire line
+                        updated_lines.append(f"def {line}\n")
+                    else:
+                        updated_lines.append(line)
 
             with open("output.txt", "a") as f:
                 f.write("\n\nUpdated function headers:\n")
@@ -114,7 +126,6 @@ class LexicalAnalyzer:
         self.count_print()
 
         return "Analysis completed. Output written to: output.txt"
-
 
 if __name__ == "__main__":
     file_path = "testfile2.py"
