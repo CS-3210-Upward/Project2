@@ -116,14 +116,16 @@ class LexicalAnalyzer:
         updated_functions = self.verify_function_headers(updated_indentation)
         print_count = self.count_print(updated_functions)
 
-        with open("output.txt", "w") as f:
+        with open("output.py", "w") as f:
+            f.write("'''\n")
             f.write("Original input program:\n")
             f.writelines(lines)
-            f.write("\n\nUpdated output program:\n")
+            f.write("'''\n")
+            f.write("\n\n# Updated output program:\n")
             f.writelines(updated_functions)
-            f.write(f"\nCount of occurrences of the keyword 'print': {print_count}\n")
+            f.write(f"\n# Count of occurrences of the keyword 'print': {print_count}\n")
 
-        return "Process completed. Output written to: output.txt"
+        return "Process completed. Output written to: output.py"
 
 
 if __name__ == "__main__":

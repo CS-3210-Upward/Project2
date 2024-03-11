@@ -1,0 +1,23 @@
+'''
+Original input program:
+def example_function1     (  parameter1  ,   parameter2 :
+    print("Inside example_function1")
+    if parameter1:
+    print("Parameter is True")
+  else:
+        print("Parameter is False")
+example_function2 (para1):
+'''
+
+
+# Updated output program:
+def example_function1(parameter1, parameter2 ):
+    print("Inside example_function1")
+    if parameter1:
+    print("Parameter is True")
+  else:
+        print("Parameter is False")
+def example_function2 (para1):
+
+
+# Count of occurrences of the keyword 'print': 3
