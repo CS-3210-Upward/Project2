@@ -1,3 +1,4 @@
+'''
 Original input program:
 def example_function1     (  parameter1  ,   parameter2 :
     print("Inside example_function1")
@@ -6,9 +7,10 @@ def example_function1     (  parameter1  ,   parameter2 :
   else:
         print("Parameter is False")
 example_function2 (para1):
+'''
 
 
-Updated output program:
+# Updated output program:
 def example_function1(parameter1, parameter2 ):
     print("Inside example_function1")
     if parameter1:
@@ -18,4 +20,4 @@ def example_function1(parameter1, parameter2 ):
 def example_function2 (para1):
 
 
-Count of occurrences of the keyword 'print': 3
+# Count of occurrences of the keyword 'print': 3
